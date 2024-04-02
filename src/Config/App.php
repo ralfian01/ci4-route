@@ -7,14 +7,14 @@ use CodeIgniter\Config\BaseConfig;
 class App extends BaseConfig
 {
     /**
-     * @var int|null Default port of application
+     * @var int|string|null Default port of application
      */
     public $port = 9090;
 
     /**
-     * @var string Hostname of application root
+     * Hostname of application root
      */
-    public $hostname = 'localhost';
+    public string $hostname = 'localhost';
 
     /**
      * URL to your application root.
@@ -28,9 +28,9 @@ class App extends BaseConfig
      * - "cdn.dummy" => "http://cdn.dummy/"
      * - "/cdn" => "http://localhost/cdn/"
      * 
-     * @var string URL to your application assets
+     * URL to your application assets
      */
-    public $assetHostname = 'cdn';
+    public string $assetHostname = 'cdn';
 
     /**
      * URL to your application assets
@@ -44,9 +44,9 @@ class App extends BaseConfig
      * - "api.dummy" => "http://api.dummy/"
      * - "/api" => "http://localhost/api/"
      * 
-     * @var string URL to your application API
+     * URL to your application API
      */
-    public $apiHostname = 'api';
+    public string $apiHostname = 'api';
 
     /**
      * URL to your application API
@@ -255,6 +255,8 @@ class App extends BaseConfig
         $this->mergeEnv();
         $this->initializeURL();
         $this->initializeAllowedURL();
+
+        parent::__construct();
     }
 
     /**
