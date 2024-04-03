@@ -1,10 +1,10 @@
 <?php
 
-namespace Ralfian01\Ci4Route\Base;
+namespace Ralfian01\Ci4RouteManager\Collection;
 
 use Config\App;
 
-class REST extends BaseRoute
+class REST extends BaseRouteCollection
 {
     protected function setRoutes($name, $arguments)
     {

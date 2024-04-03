@@ -1,11 +1,11 @@
 {
-    "name": "ralfian01/ci4-route",
+    "name": "ralfian01/ci4-route-manager",
     "description": "Set routes for web, asset, and rest api websites separately and automatically in CodeIgniter 4",
     "type": "library",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Ralfian01\\Ci4Route\\": "src/"
+            "Ralfian01\\Ci4RouteManager\\": "src/"
         }
     },
     "minimum-stability": "stable",

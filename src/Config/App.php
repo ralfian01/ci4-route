@@ -1,6 +1,6 @@
 <?php
 
-namespace Ralfian01\Ci4Route\Config;
+namespace Ralfian01\Ci4RouteManager\Config;
 
 use CodeIgniter\Config\BaseConfig;
 
