@@ -1,6 +1,6 @@
 <?php
 
-namespace Ralfian01\Ci4Route\Base;
+namespace Ralfian01\Ci4RouteManager\Collection;
 
 use CodeIgniter\Router\RouteCollection;
 use Config\Services;
@@ -18,7 +18,7 @@ use stdClass;
  * @method static RouteCollection     match(array $verbs = [], string $from = '', $to = '', ?array $options = null)
  * @method static RouteCollection     setDefault404($callable = null)
  */
-class BaseRoute
+class BaseRouteCollection
 {
     /**
      * Route pack
