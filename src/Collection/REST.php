@@ -3,15 +3,16 @@
 namespace Ralfian01\Ci4RouteManager\Collection;
 
 use Config\App;
+use Config\Services;
 
 class REST extends BaseRouteCollection
 {
-    protected function setRoutes($name, $arguments)
+    protected static function setRoutes($name, $arguments)
     {
         $config = new App;
         $routeConfig = self::routeConfig($config->apiHostname);
 
-        return $this->routes->group(
+        return self::$routes->group(
             $routeConfig->segment,
             $routeConfig->options,
             static function ($routes) use ($name, $arguments) {
@@ -26,7 +27,10 @@ class REST extends BaseRouteCollection
      */
     public static function setDefault404($callable = null)
     {
-        self::match(['get', 'post', 'put', 'patch', 'delete'], '/', $callable);
-        self::match(['get', 'post', 'put', 'patch', 'delete'], '(:any)', $callable);
+        if (!isset(self::$routes))
+            self::$routes = Services::routes();
+
+        self::$routes->match(['get', 'post', 'put', 'patch', 'delete'], '/', $callable);
+        self::$routes->match(['get', 'post', 'put', 'patch', 'delete'], '(:any)', $callable);
     }
 }

@@ -4,6 +4,7 @@ namespace Ralfian01\Ci4RouteManager\Collection;
 
 use CodeIgniter\Router\RouteCollection;
 use Config\Services;
+use Config\App;
 use stdClass;
 
 /**
@@ -21,14 +22,16 @@ use stdClass;
 class BaseRouteCollection
 {
     /**
-     * Route pack
+     * @var RouteCollection Route collection
      */
-    protected RouteCollection $routes;
+    protected static $routes;
 
     public static function __callStatic($name, $arguments)
     {
-        $instance = new static;
-        return $instance->setRoutes($name, $arguments);
+        if (!isset(self::$routes))
+            self::$routes = Services::routes();
+
+        return self::setRoutes($name, $arguments);
     }
 
     public function __construct()
@@ -40,20 +43,35 @@ class BaseRouteCollection
     /**
      * Setup Routes
      */
-    protected function setRoutes($name, $arguments)
+    protected static function setRoutes($name, $arguments)
     {
-        return $this->routes->{$name}(
+        return self::$routes->{$name}(
             $arguments[0],
             $arguments[1],
             $arguments[2] ?? null
         );
     }
 
+    public static function group(string $name, ...$params)
+    {
+        if (!isset(self::$routes))
+            self::$routes = Services::routes();
+
+        $callback = array_pop($params);
+
+        return self::$routes->group($name, $params, function ($param) use ($callback) {
+            self::$routes = $param;
+            return $callback(self::$routes);
+        });
+    }
+
+
     /**
      * @internal
      */
     protected static function routeConfig(string $hostname)
     {
+        $appConfig = new App();
         $return = new stdClass();
 
         if (preg_match('~^/[A-Za-z_-]+$~', $hostname)) {
@@ -62,18 +80,19 @@ class BaseRouteCollection
             $return->options = [];
         } elseif (preg_match('~^[A-Za-z_-]+\.[A-Za-z_-]+$~', $hostname)) {
             // Format: subdomain.domain
-            $return->segment = '';
-            $return->options = [
-                'subdomain' => explode('.', $hostname)[0],
-            ];
+            $return->segment = '/';
+            $return->options = [];
+            $return->options['subdomain'] = explode('.', $hostname)[0];
+            $return->options['hostname'] = str_replace('://', "://{$return->options['subdomain']}.", $appConfig->baseURL);
+            $return->options['hostname'] = str_replace(['http://', 'https://'], '', $return->options['hostname']);
         } elseif (preg_match('~^[A-Za-z_-]+$~', $hostname)) {
             // Format: subdomain
-            $return->segment = '';
-            $return->options = [
-                'subdomain' => $hostname,
-            ];
+            $return->segment = '/';
+            $return->options['subdomain'] = $hostname;
+            $return->options['hostname'] = str_replace('://', "://{$return->options['subdomain']}.", $appConfig->baseURL);
+            $return->options['hostname'] = str_replace(['http://', 'https://'], '', $return->options['hostname']);
         } else {
-            $return->segment = '';
+            $return->segment = '/';
             $return->options = [];
         }
 

@@ -6,12 +6,12 @@ use Config\App;
 
 class Web extends BaseRouteCollection
 {
-    protected function setRoutes($name, $arguments)
+    protected static function setRoutes($name, $arguments)
     {
         $config = new App;
         $routeConfig = self::routeConfig($config->hostname);
 
-        return $this->routes->group(
+        return self::$routes->group(
             '',
             [],
             static function ($routes) use ($name, $arguments) {
