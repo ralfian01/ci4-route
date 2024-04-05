@@ -15,7 +15,6 @@ use stdClass;
  * @method static RouteCollection     delete(string $from, $to, ?array $options = null)
  * @method static RouteCollection     head(string $from, $to, ?array $options = null)
  * @method static RouteCollection     options(string $from, $to, ?array $options = null)
- * @method static RouteCollection     group(string $name, ...$params)
  * @method static RouteCollection     match(array $verbs = [], string $from = '', $to = '', ?array $options = null)
  * @method static RouteCollection     setDefault404($callable = null)
  */
@@ -38,13 +37,6 @@ class BaseRouteCollection
      */
     protected static function setRoutes($name, $arguments)
     {
-        if ($name == 'group') {
-            return self::$routes->group($arguments[0], function ($route) use ($arguments) {
-                self::$routes = $route;
-                $arguments[1](self::$routes);
-            });
-        }
-
         return self::$routes->{$name}(
             $arguments[0],
             $arguments[1],
@@ -52,24 +44,31 @@ class BaseRouteCollection
         );
     }
 
-    // public static function group(string $name, ...$params)
-    // {
-    //     if (!isset(self::$routes))
-    //         self::$routes = Services::routes();
+    /**
+     * @param string $name
+     * @param mixed ...$params
+     * @return \CodeIgniter\Router\RouteCollection
+     */
+    public static function group(string $name, ...$params)
+    {
+        self::$routes = Services::routes();
 
-    //     $callback = array_pop($params);
+        $callback = array_pop($params);
 
-    //     return self::$routes->group($name, $params, function ($route) use ($callback) {
-    //         self::$routes = $route;
-    //         return $callback(self::$routes);
-    //     });
-    // }
-
+        return self::$routes->group(
+            $name,
+            $params,
+            function ($route) use ($callback) {
+                self::$routes = $route;
+                $callback(self::$routes);
+            }
+        );
+    }
 
     /**
      * @internal
      */
-    protected static function routeConfig(string $hostname)
+    public static function routeConfig(string $hostname)
     {
         $appConfig = new App();
         $return = new stdClass();
@@ -78,6 +77,8 @@ class BaseRouteCollection
             // Format: /<url>
             $return->segment = $hostname;
             $return->options = [];
+            $return->options['subdomain'] = '';
+            $return->options['hostname'] = str_replace(['http://', 'https://'], '', $appConfig->baseURL);
         } elseif (preg_match('~^[A-Za-z_-]+\.[A-Za-z_-]+$~', $hostname)) {
             // Format: subdomain.domain
             $return->segment = '/';

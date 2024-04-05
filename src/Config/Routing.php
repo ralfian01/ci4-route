@@ -108,12 +108,19 @@ class Routing extends BaseRouting
     }
 
     private array $baseRouteFiles = [
-        __DIR__ . '../BaseRoute/BaseREST.php',
-        __DIR__ . '../BaseRoute/BaseWeb.php',
+        __DIR__ . '/../BaseRoute/BaseREST.php',
+        __DIR__ . '/../BaseRoute/BaseWeb.php',
+        __DIR__ . '/../BaseRoute/BaseAsset.php',
     ];
+
+    /**
+     * @internal
+     */
+    public array $routeReferenceFiles = [];
 
     protected function initRouteFiles()
     {
+        $this->routeReferenceFiles = $this->routeFiles;
         $this->routeFiles = [];
 
         foreach ($this->baseRouteFiles as $routeFile) {

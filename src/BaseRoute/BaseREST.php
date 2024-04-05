@@ -2,18 +2,17 @@
 
 use Ralfian01\Ci4RouteManager\Collection\REST;
 use Config\App;
+use Config\Routing;
 
-/**
- * @var RouteCollection $routes
- */
-
+$routingConfig = new Routing;
 $routeConfig = REST::routeConfig((new App)->apiHostname);
 
 REST::group(
     $routeConfig->segment,
-    $routeConfig->options,
-    function () {
+    function () use ($routingConfig, $routeConfig) {
 
-        include APPPATH . 'Config/Routes/REST.php';
+        foreach ($routingConfig->routeReferenceFiles as $routeReferenceFile) {
+            include_once($routeReferenceFile);
+        }
     }
 );

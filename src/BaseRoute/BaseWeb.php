@@ -3,10 +3,6 @@
 use Ralfian01\Ci4RouteManager\Collection\Web;
 use Config\App;
 
-/**
- * @var RouteCollection $routes
- */
-
 $routeConfig = Web::routeConfig((new App)->hostname);
 
 Web::group(
