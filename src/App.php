@@ -17,12 +17,6 @@ class App extends ConfigApp
     public string $hostname = 'localhost';
 
     /**
-     * URL to your application root.
-     * This will be your base URL. Must end with a slash ("/")
-     */
-    public string $baseURL;
-
-    /**
      * How to use:
      * - "cdn" => "http://cdn.localhost/"
      * - "cdn.dummy" => "http://cdn.dummy/"
@@ -33,12 +27,6 @@ class App extends ConfigApp
     public string $assetHostname = 'cdn';
 
     /**
-     * URL to your application assets
-     * Must end with a slash ("/")
-     */
-    public string $assetURL;
-
-    /**
      * How to use:
      * - "api" => "http://api.localhost/"
      * - "api.dummy" => "http://api.dummy/"
@@ -47,12 +35,6 @@ class App extends ConfigApp
      * URL to your application API
      */
     public string $apiHostname = 'api';
-
-    /**
-     * URL to your application API
-     * Must end with a slash ("/")
-     */
-    public string $apiURL;
 
     /**
      * URLs that is allowed to access the application

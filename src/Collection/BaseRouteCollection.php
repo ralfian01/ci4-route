@@ -28,16 +28,9 @@ class BaseRouteCollection
 
     public static function __callStatic($name, $arguments)
     {
-        if (!isset(self::$routes))
-            self::$routes = Services::routes();
+        self::$routes = Services::routes();
 
-        return self::setRoutes($name, $arguments);
-    }
-
-    public function __construct()
-    {
-        if (!isset($this->routes))
-            $this->routes = Services::routes();
+        return static::setRoutes($name, $arguments);
     }
 
     /**
@@ -45,6 +38,13 @@ class BaseRouteCollection
      */
     protected static function setRoutes($name, $arguments)
     {
+        if ($name == 'group') {
+            return self::$routes->group($arguments[0], function ($route) use ($arguments) {
+                self::$routes = $route;
+                $arguments[1](self::$routes);
+            });
+        }
+
         return self::$routes->{$name}(
             $arguments[0],
             $arguments[1],
@@ -52,18 +52,18 @@ class BaseRouteCollection
         );
     }
 
-    public static function group(string $name, ...$params)
-    {
-        if (!isset(self::$routes))
-            self::$routes = Services::routes();
+    // public static function group(string $name, ...$params)
+    // {
+    //     if (!isset(self::$routes))
+    //         self::$routes = Services::routes();
 
-        $callback = array_pop($params);
+    //     $callback = array_pop($params);
 
-        return self::$routes->group($name, $params, function ($param) use ($callback) {
-            self::$routes = $param;
-            return $callback(self::$routes);
-        });
-    }
+    //     return self::$routes->group($name, $params, function ($route) use ($callback) {
+    //         self::$routes = $route;
+    //         return $callback(self::$routes);
+    //     });
+    // }
 
 
     /**
