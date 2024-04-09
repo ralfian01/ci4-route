@@ -5,7 +5,7 @@ namespace Ralfian01\Ci4RouteManager\Asset;
 use CodeIgniter\Controller;
 use Ralfian01\Ci4RouteManager\Config\App;
 use Ralfian01\Ci4RouteManager\Config\Assets;
-use MVCME\Files\File;
+use CodeIgniter\Files\File;
 use Config\Assets as AssetsConfig;
 use Config\App as AppConfig;
 use Config\Mimes;
