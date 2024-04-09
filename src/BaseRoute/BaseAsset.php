@@ -1,19 +1,19 @@
 <?php
 
-use Ralfian01\Ci4RouteManager\Collection\Web;
+use Ralfian01\Ci4RouteManager\Collection\BaseRouteCollection;
 use Config\App;
 
 /**
  * @var RouteCollection $routes
  */
 
-$routeConfig = Web::routeConfig((new App)->hostname);
+$routeConfig = BaseRouteCollection::routeConfig((new App)->assetHostname);
 
-Web::group(
+$routes->group(
     $routeConfig->segment,
     $routeConfig->options,
-    function () {
+    function ($routes) {
 
-        include APPPATH . 'Routes/REST.php';
+        echo "Worked";
     }
 );

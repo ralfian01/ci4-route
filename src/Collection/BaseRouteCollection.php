@@ -37,6 +37,8 @@ class BaseRouteCollection
      */
     protected static function setRoutes($name, $arguments)
     {
+        self::$routes = Services::routes();
+
         return self::$routes->{$name}(
             $arguments[0],
             $arguments[1],
@@ -74,27 +76,30 @@ class BaseRouteCollection
         $return = new stdClass();
 
         if (preg_match('~^/[A-Za-z_-]+$~', $hostname)) {
-            // Format: /<url>
+            // Format: /segment
             $return->segment = $hostname;
             $return->options = [];
             $return->options['subdomain'] = '';
             $return->options['hostname'] = str_replace(['http://', 'https://'], '', $appConfig->baseURL);
         } elseif (preg_match('~^[A-Za-z_-]+\.[A-Za-z_-]+$~', $hostname)) {
             // Format: subdomain.domain
-            $return->segment = '/';
+            $return->segment = '';
             $return->options = [];
             $return->options['subdomain'] = explode('.', $hostname)[0];
             $return->options['hostname'] = str_replace('://', "://{$return->options['subdomain']}.", $appConfig->baseURL);
             $return->options['hostname'] = str_replace(['http://', 'https://'], '', $return->options['hostname']);
         } elseif (preg_match('~^[A-Za-z_-]+$~', $hostname)) {
             // Format: subdomain
-            $return->segment = '/';
+            $return->segment = '';
+            $return->options = [];
             $return->options['subdomain'] = $hostname;
             $return->options['hostname'] = str_replace('://', "://{$return->options['subdomain']}.", $appConfig->baseURL);
             $return->options['hostname'] = str_replace(['http://', 'https://'], '', $return->options['hostname']);
         } else {
-            $return->segment = '/';
+            $return->segment = '';
             $return->options = [];
+            $return->options['subdomain'] = '';
+            $return->options['hostname'] = str_replace(['http://', 'https://'], '', $appConfig->baseURL);
         }
 
         return $return;
